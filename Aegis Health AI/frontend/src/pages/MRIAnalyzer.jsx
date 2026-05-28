@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { API_BASE_URL } from '../context/AuthContext';
 import { 
   Upload, 
@@ -19,6 +19,7 @@ export default function MRIAnalyzer() {
   const [loading, setLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
   const [error, setError] = useState('');
+  const [isDragging, setIsDragging] = useState(false);
 
   const loadingSteps = [
     "Opening contrast files...",
@@ -28,15 +29,79 @@ export default function MRIAnalyzer() {
     "Executing Gemini Neuroradiology Vision Analysis..."
   ];
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
+  const processFile = (file) => {
     if (file) {
-      setSelectedFile(file);
-      setPreviewUrl(URL.createObjectURL(file));
-      setAnalysis(null);
-      setError('');
+      if (file.type.startsWith('image/')) {
+        setSelectedFile(file);
+        setPreviewUrl(URL.createObjectURL(file));
+        setAnalysis(null);
+        setError('');
+      } else {
+        setError('Please select, drag, or paste a valid image file.');
+      }
     }
   };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    processFile(file);
+  };
+
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    const file = e.dataTransfer.files[0];
+    processFile(file);
+  };
+
+  useEffect(() => {
+    const handlePaste = (e) => {
+      // Don't intercept paste events inside normal text input/textarea controls if they exist
+      if (
+        (e.target.tagName === 'INPUT' && e.target.type !== 'file') ||
+        e.target.tagName === 'TEXTAREA'
+      ) {
+        return;
+      }
+
+      const items = e.clipboardData?.items;
+      if (!items) return;
+
+      for (const item of items) {
+        if (item.type.indexOf('image') !== -1) {
+          const file = item.getAsFile();
+          if (file) {
+            processFile(file);
+            e.preventDefault();
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('paste', handlePaste);
+    return () => {
+      window.removeEventListener('paste', handlePaste);
+    };
+  }, []);
 
   const handleAnalyze = async () => {
     if (!selectedFile) return;
@@ -97,7 +162,17 @@ export default function MRIAnalyzer() {
             
             {/* Drag & drop box */}
             <div className="w-full">
-              <label className="w-full h-64 border-2 border-dashed border-slate-300 dark:border-slate-800 rounded-3xl flex flex-col items-center justify-center cursor-pointer hover:bg-slate-100/50 dark:hover:bg-slate-900/30 transition-colors relative overflow-hidden group">
+              <label 
+                onDragEnter={handleDragEnter}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                className={`w-full h-64 border-2 border-dashed rounded-3xl flex flex-col items-center justify-center cursor-pointer transition-all duration-200 relative overflow-hidden group ${
+                  isDragging 
+                    ? 'border-brand-500 bg-brand-50/20 dark:bg-brand-500/10' 
+                    : 'border-slate-300 dark:border-slate-800 hover:bg-slate-100/50 dark:hover:bg-slate-900/30'
+                }`}
+              >
                 <input 
                   type="file" 
                   accept="image/*" 
@@ -105,18 +180,28 @@ export default function MRIAnalyzer() {
                   className="hidden" 
                 />
                 {previewUrl ? (
-                  <img 
-                    src={previewUrl} 
-                    alt="MRI Preview" 
-                    className="absolute inset-0 w-full h-full object-cover rounded-3xl group-hover:scale-105 transition-transform duration-300" 
-                  />
+                  <div className="absolute inset-0 w-full h-full">
+                    <img 
+                      src={previewUrl} 
+                      alt="MRI Preview" 
+                      className="w-full h-full object-cover rounded-3xl group-hover:scale-105 transition-transform duration-300" 
+                    />
+                    <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white p-4">
+                      <Upload className="w-8 h-8 mb-2 animate-bounce" />
+                      <span className="text-xs font-bold">Replace MRI Scan</span>
+                      <span className="text-[10px] text-slate-200 mt-1">Choose, drag or paste new image</span>
+                    </div>
+                  </div>
                 ) : (
                   <div className="flex flex-col items-center p-6 text-slate-400">
-                    <div className="p-4 bg-slate-100 dark:bg-slate-900/50 rounded-2xl mb-4 group-hover:text-brand-500 transition-colors">
+                    <div className="p-4 bg-slate-100 dark:bg-slate-900/50 rounded-2xl mb-3 group-hover:text-brand-500 transition-colors">
                       <Upload className="w-8 h-8" />
                     </div>
-                    <span className="text-xs font-bold text-slate-800 dark:text-slate-300">Choose T1-Weighted MRI scan</span>
-                    <span className="text-[10px] text-slate-400 mt-1">Supports JPEG, PNG or JPG files</span>
+                    <span className="text-xs font-bold text-slate-800 dark:text-slate-300">Choose, drag or paste T1-Weighted MRI scan</span>
+                    <span className="text-[10px] text-slate-400 mt-1">Supports JPEG, PNG, JPG or Clipboard paste</span>
+                    <span className="text-[9px] text-brand-500 dark:text-brand-400 font-medium mt-2 bg-brand-50/50 dark:bg-brand-950/30 px-2 py-0.5 rounded-full border border-brand-100/30 animate-pulse-slow">
+                      Press Cmd+V or Ctrl+V anywhere to paste
+                    </span>
                   </div>
                 )}
               </label>

@@ -13,5 +13,10 @@
         "username": "john",
         "email": "aky@hospital.org",
         "hashed_password": "$2b$12$P.WbVP7zBbbNU8WJER8VRu8LSqVwB5ukihPMVmLXbuqU1NN1ZEFbG"
+    },
+    "abhishekyadav.mern@gmail.com": {
+        "username": "Abhishek",
+        "email": "abhishekyadav.mern@gmail.com",
+        "hashed_password": "$2b$12$kNpvYwhp4PVFu5/fg2CCreq1/8lyQUlfUZ7VOjQx3DrWUOOuxNCwu"
     }
 }

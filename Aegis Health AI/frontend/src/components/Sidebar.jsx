@@ -1,27 +1,28 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { 
-  Activity, 
-  LayoutDashboard, 
-  MessageSquareHeart, 
-  FileSearch, 
-  BrainCircuit, 
-  Sun, 
-  Moon, 
+import {
+  Activity,
+  LayoutDashboard,
+  MessageSquareHeart,
+  FileSearch,
+  BrainCircuit,
+  Sun,
+  Moon,
   LogOut,
   User
 } from 'lucide-react';
 
-export default function Sidebar({ currentPage, setCurrentPage }) {
+export default function Sidebar() {
   const { user, logout } = useAuth();
   const { darkMode, toggleTheme } = useTheme();
 
   const navigationItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'chat', label: 'AI Health Assistant', icon: MessageSquareHeart },
-    { id: 'symptom', label: 'Symptom Analyzer', icon: FileSearch },
-    { id: 'mri', label: 'MRI Brain Scan', icon: BrainCircuit },
+    { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { to: '/chat', label: 'AI Health Assistant', icon: MessageSquareHeart },
+    { to: '/symptom', label: 'Symptom Analyzer', icon: FileSearch },
+    { to: '/mri', label: 'MRI Brain Scan', icon: BrainCircuit },
   ];
 
   return (
@@ -45,20 +46,25 @@ export default function Sidebar({ currentPage, setCurrentPage }) {
       <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
         {navigationItems.map((item) => {
           const Icon = item.icon;
-          const isActive = currentPage === item.id;
           return (
-            <button
-              key={item.id}
-              onClick={() => setCurrentPage(item.id)}
-              className={`w-full flex items-center gap-3.5 px-4.5 py-3.5 rounded-2xl text-sm font-semibold transition-all duration-200 ${
-                isActive
-                  ? 'bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-md shadow-brand-500/10'
-                  : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100/50 dark:hover:bg-slate-900/50 hover:text-slate-800 dark:hover:text-white'
-              }`}
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) =>
+                `w-full flex items-center gap-3.5 px-4.5 py-3.5 rounded-2xl text-sm font-semibold transition-all duration-200 ${
+                  isActive
+                    ? 'bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-md shadow-brand-500/10'
+                    : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100/50 dark:hover:bg-slate-900/50 hover:text-slate-800 dark:hover:text-white'
+                }`
+              }
             >
-              <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-slate-600'}`} />
-              <span>{item.label}</span>
-            </button>
+              {({ isActive }) => (
+                <>
+                  <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+                  <span>{item.label}</span>
+                </>
+              )}
+            </NavLink>
           );
         })}
       </nav>

@@ -1,5 +1,7 @@
 # Aegis Health System Architecture & Data Flow
 
+![Aegis Health System Architecture & Data Flow Diagram](system_architecture.png)
+
 Below is the complete system architecture and clinical data flow map of the Aegis Health platform, visualizing how requests originate in the React client, route through the FastAPI API gateway, integrate with local datasets and machine learning caches, and utilize Google Gemini multi-modal endpoints for diagnostics and conversation.
 
 ---

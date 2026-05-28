@@ -1,0 +1,17 @@
+{
+    "sk@hospital.org": {
+        "username": "dr sk ydv",
+        "email": "sk@hospital.org",
+        "hashed_password": "$2b$12$hg0LkVIoNnqsoeo/GStrQ.C0H2nANTNk7HyNs9Y7SPtNKiEZRb6zu"
+    },
+    "ak@hospital.org": {
+        "username": "Dr ak ydv",
+        "email": "ak@hospital.org",
+        "hashed_password": "$2b$12$21vc09vAQKQ.mcpXYkjMU.W8Dtzhy8WGex3.g1atdu.53wiI8O/fe"
+    },
+    "aky@hospital.org": {
+        "username": "john",
+        "email": "aky@hospital.org",
+        "hashed_password": "$2b$12$P.WbVP7zBbbNU8WJER8VRu8LSqVwB5ukihPMVmLXbuqU1NN1ZEFbG"
+    }
+}

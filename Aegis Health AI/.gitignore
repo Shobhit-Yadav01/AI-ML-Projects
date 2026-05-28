@@ -1,0 +1,85 @@
+# =========================================================================
+# AEGIS HEALTH PLATFORM - SYSTEM MASTER GITIGNORE
+# =========================================================================
+
+# 1. Virtual Environments & Python Packages (Recursive)
+**/venv/
+**/env/
+**/.venv/
+venv/
+.venv/
+env/
+Active.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# 2. Dependency Folders (node_modules recursive)
+**/node_modules/
+node_modules/
+yarn.lock
+pnpm-lock.yaml
+
+# 3. Compiled Build & Production Outputs (Recursive)
+**/dist/
+**/dist-ssr/
+**/build/
+frontend/dist/
+dist/
+build/
+
+# 4. Local DB & Transactional User Records
+backend/app/users_db.json
+
+# 5. Environment Secrets & API Keys (Critical Safety)
+**/.env
+**/.env.local
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+backend/.env
+frontend/.env
+*.env
+
+# 6. Python Cache, Bytecode & Model Persistences (Recursive)
+**/__pycache__/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+backend/model/RandomForest.pkl
+backend/tumor_detection_model.h5
+*.pkl
+*.joblib
+*.h5
+
+# 7. System & IDE Workspace Configurations (Recursive)
+**/.vscode/
+**/.idea/
+.vscode/
+.idea/
+.project
+.pydevproject
+.settings/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+**/Thumbs.db
+Thumbs.db
+desktop.ini
+
+# 8. Diagnostic Logs, Task Logs & Temp Files (Recursive)
+logs/
+**/logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.eslintcache

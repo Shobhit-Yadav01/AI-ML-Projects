@@ -8,6 +8,8 @@ Built with premium clinical aesthetics, Aegis Health implements a responsive gla
 
 ## 🏗️ System Architecture & Data Flow
 
+![Aegis Health System Architecture & Data Flow Diagram](system_architecture.png)
+
 ```
    ┌────────────────────────────────────────────────────────┐
    │                     USER (Browser)                     │
